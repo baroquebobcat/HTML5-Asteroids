@@ -881,24 +881,26 @@ var Asteroids = {};
     bigAlien: null,
 
     nextBigAlienTime: null,
-
+    randomPosition: function() {
+      return xyrot(Math.random() * this.canvasWidth, 
+		   Math.random() * this.canvasHeight,
+		   0);
+    },
 
     spawnAsteroids: function (count) {
       if (!count) count = this.totalAsteroids;
       for (var i = 0; i < count; i++) {
 	var roid = new Asteroid();
-	roid.pos.x = Math.random() * this.canvasWidth;
-	roid.pos.y = Math.random() * this.canvasHeight;
+	roid.pos = this.randomPosition();
 	while (!roid.isClear()) {
-	  roid.pos.x = Math.random() * this.canvasWidth;
-	  roid.pos.y = Math.random() * this.canvasHeight;
+	  roid.pos = this.randomPosition();
 	}
 	roid.vel.x = Math.random() * 4 - 2;
 	roid.vel.y = Math.random() * 4 - 2;
+	roid.vel.rot = Math.random() * 2 - 1;
 	if (Math.random() > 0.5) {
 	  roid.points.reverse();
 	}
-	roid.vel.rot = Math.random() * 2 - 1;
 	Game.sprites.push(roid);
       }
     },
