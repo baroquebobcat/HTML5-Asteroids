@@ -139,21 +139,26 @@ var Asteroids = {}
         self.context.restore();
       };
 
-      if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
+      if (this.bridgesH &&
+	  this.currentNode &&
+	  this.currentNode.dupe.horizontal) {
         this.x += this.currentNode.dupe.horizontal;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.x -= this.currentNode.dupe.horizontal;
         }
       }
-      if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
+      if (this.bridgesV &&
+	  this.currentNode &&
+	  this.currentNode.dupe.vertical) {
         this.y += this.currentNode.dupe.vertical;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.y -= this.currentNode.dupe.vertical;
         }
       }
-      if (this.bridgesH && this.bridgesV &&
+      if (this.bridgesH && 
+	  this.bridgesV &&
           this.currentNode &&
           this.currentNode.dupe.vertical &&
           this.currentNode.dupe.horizontal) {
