@@ -838,7 +838,7 @@ var Asteroids = {};
     face: null
   };
 
-  SFX = {
+  var SFX = {
     laser:     new Audio('39459__THE_bizniss__laser.wav'),
     explosion: new Audio('51467__smcameron__missile_explosion.wav')
   };
@@ -868,7 +868,7 @@ var Asteroids = {};
   // pre-mute audio
   SFX.muted = true;
 
-  Game = {
+  var Game = {
     score: 0,
     totalAsteroids: 5,
     lives: 0,
