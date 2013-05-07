@@ -130,24 +130,25 @@ var Asteroids = {}
 
       this.context.restore();
 
+      var self = this;
+      var transformDrawCheckCollisions = function(canidates) {
+        self.context.save();
+        self.configureTransform();
+        self.draw();
+        self.checkCollisionsAgainst(canidates);
+        self.context.restore();
+      };
+
       if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
         this.x += this.currentNode.dupe.horizontal;
-        this.context.save();
-        this.configureTransform();
-        this.draw();
-        this.checkCollisionsAgainst(canidates);
-        this.context.restore();
+	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.x -= this.currentNode.dupe.horizontal;
         }
       }
       if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
         this.y += this.currentNode.dupe.vertical;
-        this.context.save();
-        this.configureTransform();
-        this.draw();
-        this.checkCollisionsAgainst(canidates);
-        this.context.restore();
+	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.y -= this.currentNode.dupe.vertical;
         }
@@ -158,11 +159,7 @@ var Asteroids = {}
           this.currentNode.dupe.horizontal) {
         this.x += this.currentNode.dupe.horizontal;
         this.y += this.currentNode.dupe.vertical;
-        this.context.save();
-        this.configureTransform();
-        this.draw();
-        this.checkCollisionsAgainst(canidates);
-        this.context.restore();
+	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.x -= this.currentNode.dupe.horizontal;
           this.y -= this.currentNode.dupe.vertical;
