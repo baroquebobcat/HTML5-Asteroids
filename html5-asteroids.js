@@ -77,6 +77,12 @@ var Asteroids = {};
     };
   };
 
+  var withContext = function(context, inContext) {
+    context.save();
+    inContext(context);
+    context.restore();
+  };
+
   var Sprite = function () {
     this.init = function (name, points) {
       this.name     = name;
@@ -119,25 +125,24 @@ var Asteroids = {};
 
       this.move(delta);
       this.updateGrid();
-
-      this.context.save();
-      this.configureTransform();
-      this.draw();
-
-      var canidates = this.findCollisionCanidates();
-
-      this.matrix.configure(this.rot, this.scale, this.x, this.y);
-      this.checkCollisionsAgainst(canidates);
-
-      this.context.restore();
-
+      
+      var canidates;
       var self = this;
+      withContext(this.context, function(){
+	self.configureTransform();
+	self.draw();
+
+	canidates = self.findCollisionCanidates();
+
+	self.matrix.configure(self.rot, self.scale, self.x, self.y);
+	self.checkCollisionsAgainst(canidates);
+      });
       var transformDrawCheckCollisions = function(canidates) {
-        self.context.save();
-        self.configureTransform();
-        self.draw();
-        self.checkCollisionsAgainst(canidates);
-        self.context.restore();
+        withContext(self.context, function(){
+          self.configureTransform();
+          self.draw();
+          self.checkCollisionsAgainst(canidates);
+	});
       };
 
       if (this.bridgesH &&
