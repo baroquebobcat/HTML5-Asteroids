@@ -96,6 +96,7 @@ var Asteroids = {};
       this.name     = name;
       this.points   = points;
 
+      this.pos = zeroedXYRot();
       this.vel = zeroedXYRot();
       this.acc = zeroedXYRot();
     };
@@ -109,9 +110,6 @@ var Asteroids = {};
 
     this.collidesWith = [];
 
-    this.x     = 0;
-    this.y     = 0;
-    this.rot   = 0;
     this.scale = 1;
 
     this.currentNode = null;
@@ -133,7 +131,7 @@ var Asteroids = {};
 
 	canidates = self.findCollisionCanidates();
 
-	self.matrix.configure(self.rot, self.scale, self.x, self.y);
+	self.matrix.configure(self.pos.rot, self.scale, self.pos.x, self.pos.y);
 	self.checkCollisionsAgainst(canidates);
       });
       var transformDrawCheckCollisions = function(canidates) {
@@ -147,19 +145,19 @@ var Asteroids = {};
       if (this.bridgesH &&
 	  this.currentNode &&
 	  this.currentNode.dupe.horizontal) {
-        this.x += this.currentNode.dupe.horizontal;
+        this.pos.x += this.currentNode.dupe.horizontal;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
-          this.x -= this.currentNode.dupe.horizontal;
+          this.pos.x -= this.currentNode.dupe.horizontal;
         }
       }
       if (this.bridgesV &&
 	  this.currentNode &&
 	  this.currentNode.dupe.vertical) {
-        this.y += this.currentNode.dupe.vertical;
+        this.pos.y += this.currentNode.dupe.vertical;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
-          this.y -= this.currentNode.dupe.vertical;
+          this.pos.y -= this.currentNode.dupe.vertical;
         }
       }
       if (this.bridgesH && 
@@ -167,12 +165,12 @@ var Asteroids = {};
           this.currentNode &&
           this.currentNode.dupe.vertical &&
           this.currentNode.dupe.horizontal) {
-        this.x += this.currentNode.dupe.horizontal;
-        this.y += this.currentNode.dupe.vertical;
+        this.pos.x += this.currentNode.dupe.horizontal;
+        this.pos.y += this.currentNode.dupe.vertical;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
-          this.x -= this.currentNode.dupe.horizontal;
-          this.y -= this.currentNode.dupe.vertical;
+          this.pos.x -= this.currentNode.dupe.horizontal;
+          this.pos.y -= this.currentNode.dupe.vertical;
         }
       }
     };
@@ -186,13 +184,13 @@ var Asteroids = {};
 
       this.vel.x += this.acc.x * delta;
       this.vel.y += this.acc.y * delta;
-      this.x += this.vel.x * delta;
-      this.y += this.vel.y * delta;
-      this.rot += this.vel.rot * delta;
-      if (this.rot > 360) {
-        this.rot -= 360;
-      } else if (this.rot < 0) {
-        this.rot += 360;
+      this.pos.x += this.vel.x * delta;
+      this.pos.y += this.vel.y * delta;
+      this.pos.rot += this.vel.rot * delta;
+      if (this.pos.rot > 360) {
+        this.pos.rot -= 360;
+      } else if (this.pos.rot < 0) {
+        this.pos.rot += 360;
       }
 
       if ($.isFunction(this.postMove)) {
@@ -201,8 +199,8 @@ var Asteroids = {};
     };
     this.updateGrid = function () {
       if (!this.visible) return;
-      var gridx = Math.floor(this.x / GRID_SIZE);
-      var gridy = Math.floor(this.y / GRID_SIZE);
+      var gridx = Math.floor(this.pos.x / GRID_SIZE);
+      var gridy = Math.floor(this.pos.y / GRID_SIZE);
       gridx = (gridx >= this.grid.length) ? 0 : gridx;
       gridy = (gridy >= this.grid[0].length) ? 0 : gridy;
       gridx = (gridx < 0) ? this.grid.length-1 : gridx;
@@ -227,9 +225,9 @@ var Asteroids = {};
     this.configureTransform = function () {
       if (!this.visible) return;
 
-      var rad = (this.rot * Math.PI)/180;
+      var rad = (this.pos.rot * Math.PI)/180;
 
-      this.context.translate(this.x, this.y);
+      this.context.translate(this.pos.x, this.pos.y);
       this.context.rotate(rad);
       this.context.scale(this.scale, this.scale);
     };
@@ -328,7 +326,7 @@ var Asteroids = {};
     this.transformedPoints = function () {
       if (this.transPoints) return this.transPoints;
       var trans = new Array(this.points.length);
-      this.matrix.configure(this.rot, this.scale, this.x, this.y);
+      this.matrix.configure(this.pos.rot, this.scale, this.pos.x, this.pos.y);
       for (var i = 0; i < this.points.length/2; i++) {
 	var xi = i*2;
 	var yi = xi + 1;
@@ -343,8 +341,8 @@ var Asteroids = {};
       if (this.collidesWith.length == 0) return true;
       var cn = this.currentNode;
       if (cn == null) {
-	var gridx = Math.floor(this.x / GRID_SIZE);
-	var gridy = Math.floor(this.y / GRID_SIZE);
+	var gridx = Math.floor(this.pos.x / GRID_SIZE);
+	var gridy = Math.floor(this.pos.y / GRID_SIZE);
 	gridx = (gridx >= this.grid.length) ? 0 : gridx;
 	gridy = (gridy >= this.grid[0].length) ? 0 : gridy;
 	cn = this.grid[gridx][gridy];
@@ -360,15 +358,15 @@ var Asteroids = {};
 	      cn.south.west.isEmpty(this.collidesWith));
     };
     this.wrapPostMove = function () {
-      if (this.x > Game.canvasWidth) {
-	this.x = 0;
-      } else if (this.x < 0) {
-	this.x = Game.canvasWidth;
+      if (this.pos.x > Game.canvasWidth) {
+	this.pos.x = 0;
+      } else if (this.pos.x < 0) {
+	this.pos.x = Game.canvasWidth;
       }
-      if (this.y > Game.canvasHeight) {
-	this.y = 0;
-      } else if (this.y < 0) {
-	this.y = Game.canvasHeight;
+      if (this.pos.y > Game.canvasHeight) {
+	this.pos.y = 0;
+      } else if (this.pos.y < 0) {
+	this.pos.y = Game.canvasHeight;
       }
     };
 
@@ -402,7 +400,7 @@ var Asteroids = {};
       }
 
       if (KEY_STATUS.up) {
-	var rad = ((this.rot-90) * Math.PI)/180;
+	var rad = ((this.pos.rot-90) * Math.PI)/180;
 	this.acc.x = 0.5 * Math.cos(rad);
 	this.acc.y = 0.5 * Math.sin(rad);
 	this.children.exhaust.visible = Math.random() > 0.1;
@@ -422,12 +420,12 @@ var Asteroids = {};
 	    if (!this.bullets[i].visible) {
 	      SFX.laser();
 	      var bullet = this.bullets[i];
-	      var rad = ((this.rot-90) * Math.PI)/180;
+	      var rad = ((this.pos.rot-90) * Math.PI)/180;
 	      var vectorx = Math.cos(rad);
 	      var vectory = Math.sin(rad);
 	      // move to the nose of the ship
-	      bullet.x = this.x + vectorx * 4;
-	      bullet.y = this.y + vectory * 4;
+	      bullet.pos.x = this.pos.x + vectorx * 4;
+	      bullet.pos.y = this.pos.y + vectory * 4;
 	      bullet.vel.x = 6 * vectorx + this.vel.x;
 	      bullet.vel.y = 6 * vectory + this.vel.y;
 	      bullet.visible = true;
@@ -446,7 +444,7 @@ var Asteroids = {};
 
     this.collision = function (other) {
       SFX.explosion();
-      Game.explosionAt(other.x, other.y);
+      Game.explosionAt(other.pos.x, other.pos.y);
       Game.FSM.state = 'player_died';
       this.visible = false;
       this.currentNode.leave(this);
@@ -493,13 +491,13 @@ var Asteroids = {};
 
     this.newPosition = function () {
       if (Math.random() < 0.5) {
-	this.x = -20;
+	this.pos.x = -20;
 	this.vel.x = 1.5;
       } else {
-	this.x = Game.canvasWidth + 20;
+	this.pos.x = Game.canvasWidth + 20;
 	this.vel.x = -1.5;
       }
-      this.y = Math.random() * Game.canvasHeight;
+      this.pos.y = Math.random() * Game.canvasHeight;
     };
 
     this.setup = function () {
@@ -543,8 +541,8 @@ var Asteroids = {};
 	    var rad = 2 * Math.PI * Math.random();
 	    var vectorx = Math.cos(rad);
 	    var vectory = Math.sin(rad);
-	    bullet.x = this.x;
-	    bullet.y = this.y;
+	    bullet.pos.x = this.pos.x;
+	    bullet.pos.y = this.pos.y;
 	    bullet.vel.x = 6 * vectorx;
 	    bullet.vel.y = 6 * vectory;
 	    bullet.visible = true;
@@ -559,20 +557,20 @@ var Asteroids = {};
     BigAlien.prototype.collision = function (other) {
       if (other.name == "bullet") Game.score += 200;
       SFX.explosion();
-      Game.explosionAt(other.x, other.y);
+      Game.explosionAt(other.pos.x, other.pos.y);
       this.visible = false;
       this.newPosition();
     };
 
     this.postMove = function () {
-      if (this.y > Game.canvasHeight) {
-	this.y = 0;
-      } else if (this.y < 0) {
-	this.y = Game.canvasHeight;
+      if (this.pos.y > Game.canvasHeight) {
+	this.pos.y = 0;
+      } else if (this.pos.y < 0) {
+	this.pos.y = Game.canvasHeight;
       }
 
-      if ((this.vel.x > 0 && this.x > Game.canvasWidth + 20) ||
-	  (this.vel.x < 0 && this.x < -20)) {
+      if ((this.vel.x > 0 && this.pos.x > Game.canvasWidth + 20) ||
+	  (this.vel.x < 0 && this.pos.x < -20)) {
 	// why did the alien cross the road?
 	this.visible = false;
 	this.newPosition();
@@ -597,10 +595,10 @@ var Asteroids = {};
 
       this.context.lineWidth = 2;
       this.context.beginPath();
-      this.context.moveTo(this.x-1, this.y-1);
-      this.context.lineTo(this.x+1, this.y+1);
-      this.context.moveTo(this.x+1, this.y-1);
-      this.context.lineTo(this.x-1, this.y+1);
+      this.context.moveTo(this.pos.x-1, this.pos.y-1);
+      this.context.lineTo(this.pos.x+1, this.pos.y+1);
+      this.context.moveTo(this.pos.x+1, this.pos.y-1);
+      this.context.lineTo(this.pos.x-1, this.pos.y+1);
       this.context.stroke();
     };
     this.preMove = function (delta) {
@@ -619,7 +617,7 @@ var Asteroids = {};
       this.currentNode = null;
     };
     this.transformedPoints = function (other) {
-      return [this.x, this.y];
+      return [this.pos.x, this.pos.y];
     };
 
   };
@@ -632,8 +630,8 @@ var Asteroids = {};
       if (!this.visible) return;
       this.context.lineWidth = 2;
       this.context.beginPath();
-      this.context.moveTo(this.x, this.y);
-      this.context.lineTo(this.x-this.vel.x, this.y-this.vel.y);
+      this.context.moveTo(this.pos.x, this.pos.y);
+      this.context.lineTo(this.pos.x-this.vel.x, this.pos.y-this.vel.y);
       this.context.stroke();
     };
   };
@@ -676,7 +674,7 @@ var Asteroids = {};
 	  Game.sprites.push(roid);
 	}
       }
-      Game.explosionAt(other.x, other.y);
+      Game.explosionAt(other.pos.x, other.pos.y);
       this.die();
     };
   };
@@ -889,11 +887,11 @@ var Asteroids = {};
       if (!count) count = this.totalAsteroids;
       for (var i = 0; i < count; i++) {
 	var roid = new Asteroid();
-	roid.x = Math.random() * this.canvasWidth;
-	roid.y = Math.random() * this.canvasHeight;
+	roid.pos.x = Math.random() * this.canvasWidth;
+	roid.pos.y = Math.random() * this.canvasHeight;
 	while (!roid.isClear()) {
-	  roid.x = Math.random() * this.canvasWidth;
-	  roid.y = Math.random() * this.canvasHeight;
+	  roid.pos.x = Math.random() * this.canvasWidth;
+	  roid.pos.y = Math.random() * this.canvasHeight;
 	}
 	roid.vel.x = Math.random() * 4 - 2;
 	roid.vel.y = Math.random() * 4 - 2;
@@ -907,8 +905,8 @@ var Asteroids = {};
 
     explosionAt: function (x, y) {
       var splosion = new Explosion();
-      splosion.x = x;
-      splosion.y = y;
+      splosion.pos.x = x;
+      splosion.pos.y = y;
       splosion.visible = true;
       Game.sprites.push(splosion);
     },
@@ -946,10 +944,10 @@ var Asteroids = {};
 	this.state = 'spawn_ship';
       },
       spawn_ship: function () {
-	Game.ship.x = Game.canvasWidth / 2;
-	Game.ship.y = Game.canvasHeight / 2;
+	Game.ship.pos.x = Game.canvasWidth / 2;
+	Game.ship.pos.y = Game.canvasHeight / 2;
 	if (Game.ship.isClear()) {
-	  Game.ship.rot = 0;
+	  Game.ship.pos.rot = 0;
 	  Game.ship.vel.x = 0;
 	  Game.ship.vel.y = 0;
 	  Game.ship.visible = true;
@@ -1073,8 +1071,8 @@ var Asteroids = {};
 
     var ship = new Ship();
 
-    ship.x = Game.canvasWidth / 2;
-    ship.y = Game.canvasHeight / 2;
+    ship.pos.x = Game.canvasWidth / 2;
+    ship.pos.y = Game.canvasHeight / 2;
 
     sprites.push(ship);
 
@@ -1154,8 +1152,8 @@ var Asteroids = {};
       // extra dudes
       for (i = 0; i < Game.lives; i++) {
 	context.save();
-	extraDude.x = Game.canvasWidth - (8 * (i + 1));
-	extraDude.y = 32;
+	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
+	extraDude.pos.y = 32;
 	extraDude.configureTransform();
 	extraDude.draw();
 	context.restore();
