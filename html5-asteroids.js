@@ -47,12 +47,12 @@ var Asteroids = {};
       this.data[i] = new Array(columns);
     }
 
-    this.configure = function (rot, scale, transx, transy) {
-      var rad = (rot * Math.PI)/180;
+    this.configure = function (scale, pos) {
+      var rad = (pos.rot * Math.PI)/180;
       var sin = Math.sin(rad) * scale;
       var cos = Math.cos(rad) * scale;
-      this.set(cos, -sin, transx,
-               sin,  cos, transy);
+      this.set(cos, -sin, pos.x,
+               sin,  cos, pos.y);
     };
 
     this.set = function () {
@@ -131,7 +131,7 @@ var Asteroids = {};
 
 	canidates = self.findCollisionCanidates();
 
-	self.matrix.configure(self.pos.rot, self.scale, self.pos.x, self.pos.y);
+	self.matrix.configure(self.scale, self.pos);
 	self.checkCollisionsAgainst(canidates);
       });
       var transformDrawCheckCollisions = function(canidates) {
@@ -326,7 +326,7 @@ var Asteroids = {};
     this.transformedPoints = function () {
       if (this.transPoints) return this.transPoints;
       var trans = new Array(this.points.length);
-      this.matrix.configure(this.pos.rot, this.scale, this.pos.x, this.pos.y);
+      this.matrix.configure(this.scale, this.pos);
       for (var i = 0; i < this.points.length/2; i++) {
 	var xi = i*2;
 	var yi = xi + 1;
