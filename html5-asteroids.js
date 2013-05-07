@@ -444,7 +444,7 @@ var Asteroids = {};
 
     this.collision = function (other) {
       SFX.explosion();
-      Game.explosionAt(other.pos.x, other.pos.y);
+      Game.explosionAt(other.pos);
       Game.FSM.state = 'player_died';
       this.visible = false;
       this.currentNode.leave(this);
@@ -557,7 +557,7 @@ var Asteroids = {};
     BigAlien.prototype.collision = function (other) {
       if (other.name == "bullet") Game.score += 200;
       SFX.explosion();
-      Game.explosionAt(other.pos.x, other.pos.y);
+      Game.explosionAt(other.pos);
       this.visible = false;
       this.newPosition();
     };
@@ -674,7 +674,7 @@ var Asteroids = {};
 	  Game.sprites.push(roid);
 	}
       }
-      Game.explosionAt(other.pos.x, other.pos.y);
+      Game.explosionAt(other.pos);
       this.die();
     };
   };
@@ -905,10 +905,10 @@ var Asteroids = {};
       }
     },
 
-    explosionAt: function (x, y) {
+    explosionAt: function (position) {
       var splosion = new Explosion();
-      splosion.pos.x = x;
-      splosion.pos.y = y;
+      splosion.pos.x = position.x;
+      splosion.pos.y = position.y;
       splosion.visible = true;
       Game.sprites.push(splosion);
     },
