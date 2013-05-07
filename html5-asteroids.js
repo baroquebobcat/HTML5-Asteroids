@@ -186,12 +186,7 @@ var Asteroids = {};
       this.vel.y += this.acc.y * delta;
       this.pos.x += this.vel.x * delta;
       this.pos.y += this.vel.y * delta;
-      this.pos.rot += this.vel.rot * delta;
-      if (this.pos.rot > 360) {
-        this.pos.rot -= 360;
-      } else if (this.pos.rot < 0) {
-        this.pos.rot += 360;
-      }
+      this.pos.rot = (this.pos.rot + this.vel.rot * delta) % 360;
 
       if ($.isFunction(this.postMove)) {
         this.postMove(delta);
