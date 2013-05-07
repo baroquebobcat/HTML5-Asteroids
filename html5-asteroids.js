@@ -595,7 +595,6 @@ var Asteroids = {};
     this.configureTransform = function () {};
     this.draw = function () {
       if (this.visible) {
-	this.context.save();
 	this.context.lineWidth = 2;
 	this.context.beginPath();
 	this.context.moveTo(this.x-1, this.y-1);
@@ -603,7 +602,6 @@ var Asteroids = {};
 	this.context.moveTo(this.x+1, this.y-1);
 	this.context.lineTo(this.x-1, this.y+1);
 	this.context.stroke();
-	this.context.restore();
       }
     };
     this.preMove = function (delta) {
@@ -633,13 +631,11 @@ var Asteroids = {};
 
     this.draw = function () {
       if (this.visible) {
-	this.context.save();
 	this.context.lineWidth = 2;
 	this.context.beginPath();
 	this.context.moveTo(this.x, this.y);
 	this.context.lineTo(this.x-this.vel.x, this.y-this.vel.y);
 	this.context.stroke();
-	this.context.restore();
       }
     };
   };
@@ -704,7 +700,6 @@ var Asteroids = {};
 
     this.draw = function () {
       if (this.visible) {
-	this.context.save();
 	this.context.lineWidth = 1.0 / this.scale;
 	this.context.beginPath();
 	for (var i = 0; i < 5; i++) {
@@ -713,7 +708,6 @@ var Asteroids = {};
 	  this.context.lineTo(line[2], line[3]);
 	}
 	this.context.stroke();
-	this.context.restore();
       }
     };
 
