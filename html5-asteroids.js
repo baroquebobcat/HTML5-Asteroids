@@ -83,22 +83,21 @@ var Asteroids = {};
     context.restore();
   };
 
+  var xyrot = function(x, y, rot) {
+    return {x: x, y: y, rot: rot};
+  }
+
+  var zeroedXYRot = function() {
+    return xyrot(0,0,0);
+  }
+
   var Sprite = function () {
     this.init = function (name, points) {
       this.name     = name;
       this.points   = points;
 
-      this.vel = {
-        x:   0,
-        y:   0,
-        rot: 0
-      };
-
-      this.acc = {
-        x:   0,
-        y:   0,
-        rot: 0
-      };
+      this.vel = zeroedXYRot();
+      this.acc = zeroedXYRot();
     };
 
     this.children = {};
