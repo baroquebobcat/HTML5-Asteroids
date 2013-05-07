@@ -2,7 +2,8 @@
 //
 // Copyright (c) 2010 Doug McInnes
 //
-var Asteroids = {}
+var Asteroids = {};
+
 (function() {
 
   var KEY_CODES = {
