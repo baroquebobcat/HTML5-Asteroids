@@ -594,15 +594,15 @@ var Asteroids = {};
 
     this.configureTransform = function () {};
     this.draw = function () {
-      if (this.visible) {
-	this.context.lineWidth = 2;
-	this.context.beginPath();
-	this.context.moveTo(this.x-1, this.y-1);
-	this.context.lineTo(this.x+1, this.y+1);
-	this.context.moveTo(this.x+1, this.y-1);
-	this.context.lineTo(this.x-1, this.y+1);
-	this.context.stroke();
-      }
+      if (!this.visible) return;
+
+      this.context.lineWidth = 2;
+      this.context.beginPath();
+      this.context.moveTo(this.x-1, this.y-1);
+      this.context.lineTo(this.x+1, this.y+1);
+      this.context.moveTo(this.x+1, this.y-1);
+      this.context.lineTo(this.x-1, this.y+1);
+      this.context.stroke();
     };
     this.preMove = function (delta) {
       if (this.visible) {
@@ -630,13 +630,12 @@ var Asteroids = {};
     this.init("alienbullet");
 
     this.draw = function () {
-      if (this.visible) {
-	this.context.lineWidth = 2;
-	this.context.beginPath();
-	this.context.moveTo(this.x, this.y);
-	this.context.lineTo(this.x-this.vel.x, this.y-this.vel.y);
-	this.context.stroke();
-      }
+      if (!this.visible) return;
+      this.context.lineWidth = 2;
+      this.context.beginPath();
+      this.context.moveTo(this.x, this.y);
+      this.context.lineTo(this.x-this.vel.x, this.y-this.vel.y);
+      this.context.stroke();
     };
   };
   AlienBullet.prototype = new Bullet();
@@ -699,16 +698,16 @@ var Asteroids = {};
     }
 
     this.draw = function () {
-      if (this.visible) {
-	this.context.lineWidth = 1.0 / this.scale;
-	this.context.beginPath();
-	for (var i = 0; i < 5; i++) {
-	  var line = this.lines[i];
-	  this.context.moveTo(line[0], line[1]);
-	  this.context.lineTo(line[2], line[3]);
-	}
-	this.context.stroke();
+      if (!this.visible) { return; }
+
+      this.context.lineWidth = 1.0 / this.scale;
+      this.context.beginPath();
+      for (var i = 0; i < 5; i++) {
+	var line = this.lines[i];
+	this.context.moveTo(line[0], line[1]);
+	this.context.lineTo(line[2], line[3]);
       }
+      this.context.stroke();
     };
 
     this.preMove = function (delta) {
