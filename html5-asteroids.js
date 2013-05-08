@@ -1106,23 +1106,27 @@ var Asteroids = {};
 
     var canvasNode = canvas[0];
 
+    var drawGrid = function (context) {
+      context.beginPath();
+      for (var i = 0; i < gridWidth; i++) {
+	context.moveTo(i * GRID_SIZE, 0);
+	context.lineTo(i * GRID_SIZE, Game.canvasHeight);
+      }
+      for (var j = 0; j < gridHeight; j++) {
+	context.moveTo(0, j * GRID_SIZE);
+	context.lineTo(Game.canvasWidth, j * GRID_SIZE);
+      }
+      context.closePath();
+      context.stroke();
+    }
+
     var mainLoop = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
       Game.FSM.execute();
 
       if (KEY_STATUS.g) {
-	context.beginPath();
-	for (var i = 0; i < gridWidth; i++) {
-	  context.moveTo(i * GRID_SIZE, 0);
-	  context.lineTo(i * GRID_SIZE, Game.canvasHeight);
-	}
-	for (var j = 0; j < gridHeight; j++) {
-	  context.moveTo(0, j * GRID_SIZE);
-	  context.lineTo(Game.canvasWidth, j * GRID_SIZE);
-	}
-	context.closePath();
-	context.stroke();
+	drawGrid(context);
       }
 
       thisFrame = Date.now();
