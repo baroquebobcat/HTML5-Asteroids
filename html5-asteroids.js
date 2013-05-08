@@ -1136,6 +1136,10 @@ var Asteroids = {};
       Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
     }
 
+    var drawFrameRate = function () {
+      Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
+    }
+
     var mainLoop = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
@@ -1164,7 +1168,7 @@ var Asteroids = {};
       drawExtraDudes(context);
 
       if (showFramerate) {
-	Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
+	drawFrameRate();
       }
 
       frameCount++;
