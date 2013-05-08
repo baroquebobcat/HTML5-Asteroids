@@ -1148,12 +1148,12 @@ var Asteroids = {};
 
       // extra dudes
       for (i = 0; i < Game.lives; i++) {
-	context.save();
-	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
-	extraDude.pos.y = 32;
-	extraDude.configureTransform();
-	extraDude.draw();
-	context.restore();
+	withContext(context, function(){
+	  extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
+	  extraDude.pos.y = 32;
+	  extraDude.configureTransform();
+	  extraDude.draw();
+	});
       }
 
       if (showFramerate) {
