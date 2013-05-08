@@ -1140,6 +1140,10 @@ var Asteroids = {};
       Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
     }
 
+    var drawPausedText = function () {
+      Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
+    }
+
     var mainLoop = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
@@ -1180,7 +1184,7 @@ var Asteroids = {};
       }
 
       if (paused) {
-	Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
+	drawPausedText();
       } else {
 	requestAnimFrame(mainLoop, canvasNode);
       }
