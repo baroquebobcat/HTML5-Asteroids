@@ -1120,6 +1120,17 @@ var Asteroids = {};
       context.stroke();
     }
 
+    var drawExtraDudes = function (context) {
+      for (i = 0; i < Game.lives; i++) {
+	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
+	extraDude.pos.y = 32;
+	withContext(context, function(context){
+	  extraDude.configureTransform();
+	  extraDude.draw(context);
+	});
+      }
+    }
+
     var mainLoop = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
@@ -1149,15 +1160,7 @@ var Asteroids = {};
       var score_text = ''+Game.score;
       Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
 
-      // extra dudes
-      for (i = 0; i < Game.lives; i++) {
-	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
-	extraDude.pos.y = 32;
-	withContext(context, function(context){
-	  extraDude.configureTransform();
-	  extraDude.draw(context);
-	});
-      }
+      drawExtraDudes(context);
 
       if (showFramerate) {
 	Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
