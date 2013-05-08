@@ -125,9 +125,9 @@ var Asteroids = {};
       
       var canidates;
       var self = this;
-      withContext(this.context, function(){
+      withContext(this.context, function(context){
 	self.configureTransform();
-	self.draw();
+	self.draw(context);
 
 	canidates = self.findCollisionCanidates();
 
@@ -135,9 +135,9 @@ var Asteroids = {};
 	self.checkCollisionsAgainst(canidates);
       });
       var transformDrawCheckCollisions = function(canidates) {
-        withContext(self.context, function(){
+        withContext(self.context, function(context){
           self.configureTransform();
-          self.draw();
+          self.draw(context);
           self.checkCollisionsAgainst(canidates);
 	});
       };
@@ -226,26 +226,26 @@ var Asteroids = {};
       this.context.rotate(rad);
       this.context.scale(this.scale, this.scale);
     };
-    this.draw = function () {
+    this.draw = function (context) {
       if (!this.visible) return;
 
-      this.context.lineWidth = 1.0 / this.scale;
+      context.lineWidth = 1.0 / this.scale;
 
       for (child in this.children) {
-	this.children[child].draw();
+	this.children[child].draw(context);
       }
 
-      this.context.beginPath();
+      context.beginPath();
 
-      this.context.moveTo(this.points[0], this.points[1]);
+      context.moveTo(this.points[0], this.points[1]);
       for (var i = 1; i < this.points.length/2; i++) {
 	var xi = i*2;
 	var yi = xi + 1;
-	this.context.lineTo(this.points[xi], this.points[yi]);
+	context.lineTo(this.points[xi], this.points[yi]);
       }
 
-      this.context.closePath();
-      this.context.stroke();
+      context.closePath();
+      context.stroke();
     };
     this.findCollisionCanidates = function () {
       if (!this.visible || !this.currentNode) return [];
@@ -585,16 +585,16 @@ var Asteroids = {};
     //this.collidesWith = ["asteroid"];
 
     this.configureTransform = function () {};
-    this.draw = function () {
+    this.draw = function (context) {
       if (!this.visible) return;
 
-      this.context.lineWidth = 2;
-      this.context.beginPath();
-      this.context.moveTo(this.pos.x-1, this.pos.y-1);
-      this.context.lineTo(this.pos.x+1, this.pos.y+1);
-      this.context.moveTo(this.pos.x+1, this.pos.y-1);
-      this.context.lineTo(this.pos.x-1, this.pos.y+1);
-      this.context.stroke();
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(this.pos.x-1, this.pos.y-1);
+      context.lineTo(this.pos.x+1, this.pos.y+1);
+      context.moveTo(this.pos.x+1, this.pos.y-1);
+      context.lineTo(this.pos.x-1, this.pos.y+1);
+      context.stroke();
     };
     this.preMove = function (delta) {
       if (this.visible) {
@@ -621,13 +621,13 @@ var Asteroids = {};
   AlienBullet = function () {
     this.init("alienbullet");
 
-    this.draw = function () {
+    this.draw = function (context) {
       if (!this.visible) return;
-      this.context.lineWidth = 2;
-      this.context.beginPath();
-      this.context.moveTo(this.pos.x, this.pos.y);
-      this.context.lineTo(this.pos.x-this.vel.x, this.pos.y-this.vel.y);
-      this.context.stroke();
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(this.pos.x, this.pos.y);
+      context.lineTo(this.pos.x-this.vel.x, this.pos.y-this.vel.y);
+      context.stroke();
     };
   };
   AlienBullet.prototype = new Bullet();
@@ -689,17 +689,17 @@ var Asteroids = {};
       this.lines.push([x, y, x*2, y*2]);
     }
 
-    this.draw = function () {
+    this.draw = function (context) {
       if (!this.visible) { return; }
 
-      this.context.lineWidth = 1.0 / this.scale;
-      this.context.beginPath();
+      context.lineWidth = 1.0 / this.scale;
+      context.beginPath();
       for (var i = 0; i < 5; i++) {
 	var line = this.lines[i];
-	this.context.moveTo(line[0], line[1]);
-	this.context.lineTo(line[2], line[3]);
+	context.moveTo(line[0], line[1]);
+	context.lineTo(line[2], line[3]);
       }
-      this.context.stroke();
+      context.stroke();
     };
 
     this.preMove = function (delta) {
@@ -1147,11 +1147,11 @@ var Asteroids = {};
 
       // extra dudes
       for (i = 0; i < Game.lives; i++) {
-	withContext(context, function(){
+	withContext(context, function(context){
 	  extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
 	  extraDude.pos.y = 32;
 	  extraDude.configureTransform();
-	  extraDude.draw();
+	  extraDude.draw(context);
 	});
       }
 
