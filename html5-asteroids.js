@@ -812,21 +812,20 @@ var Asteroids = {};
     },
 
     renderText: function(text, size, x, y) {
-      this.context.save();
+      var self=this;
+      withContext(this.context, function(context) {
+	context.translate(x, y);
 
-      this.context.translate(x, y);
-
-      var pixels = size * 72 / (this.face.resolution * 100);
-      this.context.scale(pixels, -1 * pixels);
-      this.context.beginPath();
-      var chars = text.split('');
-      var charsLength = chars.length;
-      for (var i = 0; i < charsLength; i++) {
-	this.renderGlyph(this.context, this.face, chars[i]);
-      }
-      this.context.fill();
-
-      this.context.restore();
+	var pixels = size * 72 / (self.face.resolution * 100);
+	context.scale(pixels, -1 * pixels);
+	context.beginPath();
+	var chars = text.split('');
+	var charsLength = chars.length;
+	for (var i = 0; i < charsLength; i++) {
+	  self.renderGlyph(context, self.face, chars[i]);
+	}
+	context.fill();
+      });
     },
 
     context: null,
