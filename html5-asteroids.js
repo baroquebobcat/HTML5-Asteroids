@@ -1151,9 +1151,9 @@ var Asteroids = {};
 
       // extra dudes
       for (i = 0; i < Game.lives; i++) {
+	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
+	extraDude.pos.y = 32;
 	withContext(context, function(context){
-	  extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
-	  extraDude.pos.y = 32;
 	  extraDude.configureTransform();
 	  extraDude.draw(context);
 	});
