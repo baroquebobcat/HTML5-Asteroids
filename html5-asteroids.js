@@ -178,7 +178,7 @@ var Asteroids = {};
 	this.children[child].draw(context);
       }
     }
-    this.drawSelf = function (context) {
+    this.drawSelf = function (context, pos) {
       context.moveTo(this.points[0], this.points[1]);
       for (var i = 1; i < this.points.length/2; i++) {
 	var xi = i*2;
@@ -197,13 +197,13 @@ var Asteroids = {};
 
       context.beginPath();
 
-      this.drawSelf(context);
+      this.drawSelf(context, this.pos);
 
       if (this.bridgesH &&
 	  this.currentNode &&
 	  this.currentNode.dupe.horizontal) {
         this.pos.x += this.currentNode.dupe.horizontal;
-	this.drawSelf(context);
+	this.drawSelf(context, this.pos);
         if (this.currentNode) {
           this.pos.x -= this.currentNode.dupe.horizontal;
         }
@@ -212,7 +212,7 @@ var Asteroids = {};
 	  this.currentNode &&
 	  this.currentNode.dupe.vertical) {
         this.pos.y += this.currentNode.dupe.vertical;
-	this.drawSelf(context);
+	this.drawSelf(context, this.pos);
         if (this.currentNode) {
           this.pos.y -= this.currentNode.dupe.vertical;
         }
@@ -224,7 +224,7 @@ var Asteroids = {};
           this.currentNode.dupe.horizontal) {
         this.pos.x += this.currentNode.dupe.horizontal;
         this.pos.y += this.currentNode.dupe.vertical;
-	this.drawSelf(context);
+	this.drawSelf(context, this.pos);
         if (this.currentNode) {
           this.pos.x -= this.currentNode.dupe.horizontal;
           this.pos.y -= this.currentNode.dupe.vertical;
@@ -575,11 +575,11 @@ var Asteroids = {};
     this.configurePen = function (context) {
       context.lineWidth = 2;
     };
-    this.drawSelf = function (context) {
-      context.moveTo(this.pos.x-1, this.pos.y-1);
-      context.lineTo(this.pos.x+1, this.pos.y+1);
-      context.moveTo(this.pos.x+1, this.pos.y-1);
-      context.lineTo(this.pos.x-1, this.pos.y+1);
+    this.drawSelf = function (context, pos) {
+      context.moveTo(pos.x-1, pos.y-1);
+      context.lineTo(pos.x+1, pos.y+1);
+      context.moveTo(pos.x+1, pos.y-1);
+      context.lineTo(pos.x-1, pos.y+1);
     };
     this.preMove = function (delta) {
       if (this.visible) {
@@ -605,9 +605,9 @@ var Asteroids = {};
 
   AlienBullet = function () {
     this.init("alienbullet");
-    this.drawSelf = function (context) {
-      context.moveTo(this.pos.x, this.pos.y);
-      context.lineTo(this.pos.x-this.vel.x, this.pos.y-this.vel.y);
+    this.drawSelf = function (context, pos) {
+      context.moveTo(pos.x, pos.y);
+      context.lineTo(pos.x-this.vel.x, pos.y-this.vel.y);
     };
   };
   AlienBullet.prototype = new Bullet();
@@ -669,7 +669,7 @@ var Asteroids = {};
       this.lines.push([x, y, x*2, y*2]);
     }
 
-    this.drawSelf = function (context) {
+    this.drawSelf = function (context, pos) {
       for (var i = 0; i < 5; i++) {
 	var line = this.lines[i];
 	context.moveTo(line[0], line[1]);
