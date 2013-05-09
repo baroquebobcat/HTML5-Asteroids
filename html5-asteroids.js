@@ -120,45 +120,6 @@ var Asteroids = {};
 	self.matrix.configure(self.scale, self.pos);
 	self.checkCollisionsAgainst(canidates);
       });
-      var transformDrawCheckCollisions = function(canidates) {
-        withContext(self.context, function(context){
-          self.configureTransform();
-          self.draw(context);
-          self.checkCollisionsAgainst(canidates);
-	});
-      };
-
-      if (this.bridgesH &&
-	  this.currentNode &&
-	  this.currentNode.dupe.horizontal) {
-        this.pos.x += this.currentNode.dupe.horizontal;
-	transformDrawCheckCollisions(canidates);
-        if (this.currentNode) {
-          this.pos.x -= this.currentNode.dupe.horizontal;
-        }
-      }
-      if (this.bridgesV &&
-	  this.currentNode &&
-	  this.currentNode.dupe.vertical) {
-        this.pos.y += this.currentNode.dupe.vertical;
-	transformDrawCheckCollisions(canidates);
-        if (this.currentNode) {
-          this.pos.y -= this.currentNode.dupe.vertical;
-        }
-      }
-      if (this.bridgesH && 
-	  this.bridgesV &&
-          this.currentNode &&
-          this.currentNode.dupe.vertical &&
-          this.currentNode.dupe.horizontal) {
-        this.pos.x += this.currentNode.dupe.horizontal;
-        this.pos.y += this.currentNode.dupe.vertical;
-	transformDrawCheckCollisions(canidates);
-        if (this.currentNode) {
-          this.pos.x -= this.currentNode.dupe.horizontal;
-          this.pos.y -= this.currentNode.dupe.vertical;
-        }
-      }
     };
     this.move = function (delta) {
       if (!this.visible) return;
@@ -237,6 +198,38 @@ var Asteroids = {};
       context.beginPath();
 
       this.drawSelf(context);
+
+      if (this.bridgesH &&
+	  this.currentNode &&
+	  this.currentNode.dupe.horizontal) {
+        this.pos.x += this.currentNode.dupe.horizontal;
+	this.drawSelf(context);
+        if (this.currentNode) {
+          this.pos.x -= this.currentNode.dupe.horizontal;
+        }
+      }
+      if (this.bridgesV &&
+	  this.currentNode &&
+	  this.currentNode.dupe.vertical) {
+        this.pos.y += this.currentNode.dupe.vertical;
+	this.drawSelf(context);
+        if (this.currentNode) {
+          this.pos.y -= this.currentNode.dupe.vertical;
+        }
+      }
+      if (this.bridgesH &&
+	  this.bridgesV &&
+          this.currentNode &&
+          this.currentNode.dupe.vertical &&
+          this.currentNode.dupe.horizontal) {
+        this.pos.x += this.currentNode.dupe.horizontal;
+        this.pos.y += this.currentNode.dupe.vertical;
+	this.drawSelf(context);
+        if (this.currentNode) {
+          this.pos.x -= this.currentNode.dupe.horizontal;
+          this.pos.y -= this.currentNode.dupe.vertical;
+        }
+      }
 
       context.closePath();
       context.stroke();
