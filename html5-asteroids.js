@@ -77,7 +77,7 @@ var Asteroids = {};
   };
 
   var xyrot = function(x, y, rot) {
-    return {x: x, y: y, rot: rot};
+    return {x: x, y: y, rot: (rot || 0)};
   }
   var zeroedXYRot = function() { return xyrot(0,0,0); }
   var centerXYRot = function() { return xyrot(Game.canvasWidth / 2, Game.canvasHeight / 2); }
@@ -85,7 +85,10 @@ var Asteroids = {};
     return xyrot(Math.random() * Game.canvasWidth,
 		 Math.random() * Game.canvasHeight,
 		 0);
-  }
+  };
+  var bumpXYRot = function (pt, x, y, rot) {
+    return xyrot(pt.x + x, pt.y + y, (pt.rot + (rot||0)) % 360)
+  };
 
   var Sprite = function () {
     this.init = function (name, points) {
@@ -178,11 +181,8 @@ var Asteroids = {};
         this.preMove(delta);
       }
 
-      this.vel.x += this.acc.x * delta;
-      this.vel.y += this.acc.y * delta;
-      this.pos.x += this.vel.x * delta;
-      this.pos.y += this.vel.y * delta;
-      this.pos.rot = (this.pos.rot + this.vel.rot * delta) % 360;
+      this.vel = bumpXYRot(this.vel, this.acc.x * delta, this.acc.y * delta);
+      this.pos = bumpXYRot(this.pos, this.vel.x * delta, this.vel.y * delta, this.vel.rot * delta);
 
       if ($.isFunction(this.postMove)) {
         this.postMove(delta);
