@@ -24,6 +24,13 @@ var Asteroids = {};
     KEY_STATUS[KEY_CODES[code]] = false;
   }
 
+  var rotateLeft = function () { return KEY_STATUS.left; }
+  var rotateRight = function () { return KEY_STATUS.right; }
+  var thrustersOn = function () { return KEY_STATUS.up; }
+  var fireBullets = function () { return KEY_STATUS.space; }
+  var showDebugGrid = function () { return KEY_STATUS.g; }
+  var shouldStartGame = function () { return KEY_STATUS.space || window.gameStart;}
+
   var GRID_SIZE = 60;
 
   var Matrix = function (rows, columns) {
@@ -195,7 +202,7 @@ var Asteroids = {};
         this.currentNode = newNode;
       }
 
-      if (KEY_STATUS.g && this.currentNode) {
+      if (showDebugGrid() && this.currentNode) {
 	this.context.lineWidth = 3.0;
 	this.context.strokeStyle = 'green';
 	this.context.strokeRect(gridx*GRID_SIZE+2, gridy*GRID_SIZE+2, GRID_SIZE-4, GRID_SIZE-4);
@@ -378,17 +385,16 @@ var Asteroids = {};
     this.postMove = this.wrapPostMove;
 
     this.collidesWith = ["asteroid", "bigalien", "alienbullet"];
-
     this.preMove = function (delta) {
-      if (KEY_STATUS.left) {
+      if (rotateLeft()) {
 	this.vel.rot = -6;
-      } else if (KEY_STATUS.right) {
+      } else if (rotateRight()) {
 	this.vel.rot = 6;
       } else {
 	this.vel.rot = 0;
       }
 
-      if (KEY_STATUS.up) {
+      if (thrustersOn()) {
 	var rad = ((this.pos.rot-90) * Math.PI)/180;
 	this.acc.x = 0.5 * Math.cos(rad);
 	this.acc.y = 0.5 * Math.sin(rad);
@@ -402,7 +408,7 @@ var Asteroids = {};
       if (this.bulletCounter > 0) {
 	this.bulletCounter -= delta;
       }
-      if (KEY_STATUS.space) {
+      if (fireBullets()) {
 	if (this.bulletCounter <= 0) {
 	  this.bulletCounter = 10;
 	  for (var i = 0; i < this.bullets.length; i++) {
@@ -896,7 +902,7 @@ var Asteroids = {};
       },
       waiting: function () {
 	Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Space to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
-	if (KEY_STATUS.space || window.gameStart) {
+	if (shouldStartGame()) {
 	  KEY_STATUS.space = false; // hack so we don't shoot right away
 	  window.gameStart = false;
 	  this.state = 'start';
@@ -1131,7 +1137,7 @@ var Asteroids = {};
 
       Game.FSM.execute();
 
-      if (KEY_STATUS.g) {
+      if (showDebugGrid()) {
 	drawGrid(context);
       }
 
