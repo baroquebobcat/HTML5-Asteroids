@@ -80,9 +80,9 @@ var Asteroids = {};
     return {x: x, y: y, rot: rot};
   }
 
-  var zeroedXYRot = function() {
-    return xyrot(0,0,0);
-  }
+  var zeroedXYRot = function() { return xyrot(0,0,0); }
+
+  var centerXYRot = function() { return xyrot(Game.canvasWidth / 2, Game.canvasHeight / 2); }
 
   var Sprite = function () {
     this.init = function (name, points) {
@@ -928,8 +928,7 @@ var Asteroids = {};
 	this.state = 'spawn_ship';
       },
       spawn_ship: function () {
-	Game.ship.pos.x = Game.canvasWidth / 2;
-	Game.ship.pos.y = Game.canvasHeight / 2;
+	Game.ship.pos = centerXYRot();
 	if (Game.ship.isClear()) {
 	  Game.ship.pos.rot = 0;
 	  Game.ship.vel.x = 0;
