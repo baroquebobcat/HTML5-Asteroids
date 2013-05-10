@@ -190,9 +190,6 @@ var Asteroids = {};
       context.lineWidth = 1.0 / this.scale;
     }
     this.draw = function (context) {
-      var bumpPoint = function(pt, x, y) {
-	return { x: pt.x + x, y: pt.y + y };
-      }
       if (!this.visible) return;
 
       this.configurePen(context);
@@ -205,22 +202,33 @@ var Asteroids = {};
       if (this.bridgesH &&
 	  this.currentNode &&
 	  this.currentNode.dupe.horizontal) {
-	this.drawSelf(context,
-		      bumpPoint(this.pos, this.currentNode.dupe.horizontal, 0));
+        this.pos.x += this.currentNode.dupe.horizontal;
+	this.drawSelf(context, this.pos);
+        if (this.currentNode) {
+          this.pos.x -= this.currentNode.dupe.horizontal;
+        }
       }
       if (this.bridgesV &&
 	  this.currentNode &&
 	  this.currentNode.dupe.vertical) {
-	this.drawSelf(context,
-		      bumpPoint(this.pos, 0, this.currentNode.dupe.vertical));
+        this.pos.y += this.currentNode.dupe.vertical;
+	this.drawSelf(context, this.pos);
+        if (this.currentNode) {
+          this.pos.y -= this.currentNode.dupe.vertical;
+        }
       }
       if (this.bridgesH &&
 	  this.bridgesV &&
           this.currentNode &&
           this.currentNode.dupe.vertical &&
           this.currentNode.dupe.horizontal) {
-	this.drawSelf(context,
-		      bumpPoint(this.pos, this.currentNode.dupe.horizontal, this.currentNode.dupe.vertical));
+        this.pos.x += this.currentNode.dupe.horizontal;
+        this.pos.y += this.currentNode.dupe.vertical;
+	this.drawSelf(context, this.pos);
+        if (this.currentNode) {
+          this.pos.x -= this.currentNode.dupe.horizontal;
+          this.pos.y -= this.currentNode.dupe.vertical;
+        }
       }
 
       context.closePath();
