@@ -190,13 +190,7 @@ var Asteroids = {};
     };
     this.updateGrid = function () {
       if (!this.visible) return;
-      var gridx = Math.floor(this.pos.x / GRID_SIZE);
-      var gridy = Math.floor(this.pos.y / GRID_SIZE);
-      gridx = (gridx >= this.grid.length) ? 0 : gridx;
-      gridy = (gridy >= this.grid[0].length) ? 0 : gridy;
-      gridx = (gridx < 0) ? this.grid.length-1 : gridx;
-      gridy = (gridy < 0) ? this.grid[0].length-1 : gridy;
-      var newNode = this.grid[gridx][gridy];
+      var newNode = this.grid.get(this.pos);
       if (newNode != this.currentNode) {
         if (this.currentNode) {
           this.currentNode.leave(this);
@@ -206,11 +200,7 @@ var Asteroids = {};
       }
 
       if (showDebugGrid() && this.currentNode) {
-	this.context.lineWidth = 3.0;
-	this.context.strokeStyle = 'green';
-	this.context.strokeRect(gridx*GRID_SIZE+2, gridy*GRID_SIZE+2, GRID_SIZE-4, GRID_SIZE-4);
-	this.context.strokeStyle = 'black';
-	this.context.lineWidth = 1.0;
+	this.grid.drawDebugHighlight(this.context, this.pos);
       }
     };
     this.configureTransform = function () {
@@ -340,11 +330,7 @@ var Asteroids = {};
       if (this.collidesWith.length == 0) return true;
       var cn = this.currentNode;
       if (cn == null) {
-	var gridx = Math.floor(this.pos.x / GRID_SIZE);
-	var gridy = Math.floor(this.pos.y / GRID_SIZE);
-	gridx = (gridx >= this.grid.length) ? 0 : gridx;
-	gridy = (gridy >= this.grid[0].length) ? 0 : gridy;
-	cn = this.grid[gridx][gridy];
+	cn = this.grid.get(this.pos);
       }
       return (cn.isEmpty(this.collidesWith) &&
 	      cn.north.isEmpty(this.collidesWith) &&
@@ -704,7 +690,69 @@ var Asteroids = {};
   };
   Explosion.prototype = new Sprite();
 
-  GridNode = function () {
+  var Grid = function (widthpx, heightpx, nodeSize) {
+
+
+    this.nodeSize = nodeSize;
+    this.width = Math.round(widthpx / nodeSize);
+    this.height = Math.round(heightpx / nodeSize);
+    var grid = new Array(this.width);
+    for (var i = 0; i < this.width; i++) {
+      grid[i] = new Array(this.height);
+      for (var j = 0; j < this.height; j++) {
+	grid[i][j] = new GridNode();
+      }
+    }
+
+    // set up the positional references
+    for (var i = 0; i < this.width; i++) {
+      for (var j = 0; j < this.height; j++) {
+	var node   = grid[i][j];
+	node.north = grid[i][(j == 0) ? this.height-1 : j-1];
+	node.south = grid[i][(j == this.height-1) ? 0 : j+1];
+	node.west  = grid[(i == 0) ? this.width-1 : i-1][j];
+	node.east  = grid[(i == this.width-1) ? 0 : i+1][j];
+      }
+    }
+
+    // set up borders
+    for (var i = 0; i < this.width; i++) {
+      grid[i][0].dupe.vertical            =  heightpx;
+      grid[i][this.height-1].dupe.vertical = -heightpx;
+    }
+
+    for (var j = 0; j < this.height; j++) {
+      grid[0][j].dupe.horizontal           =  widthpx;
+      grid[this.width-1][j].dupe.horizontal = -widthpx;
+    }
+
+    var gridCoordinates = function(pos) {
+      var gridx = Math.floor(pos.x / nodeSize);
+      var gridy = Math.floor(pos.y / nodeSize);
+      gridx = (gridx >= grid.length) ? 0 : gridx;
+      gridy = (gridy >= grid[0].length) ? 0 : gridy;
+      gridx = (gridx < 0) ? grid.length-1 : gridx;
+      gridy = (gridy < 0) ? grid[0].length-1 : gridy;
+      return {x: gridx, y: gridy};
+    };
+
+    this.grid = grid;
+    this.get = function(pos) {
+      var coords = gridCoordinates(pos);
+      return this.grid[coords.x][coords.y];
+    }
+
+    this.drawDebugHighlight = function(context, pos) {
+      var coords = gridCoordinates(pos);
+      context.lineWidth = 3.0;
+      context.strokeStyle = 'green';
+      context.strokeRect(coords.x*this.nodeSize+2, coords.y*this.nodeSize+2, this.nodeSize-4, this.nodeSize-4);
+      context.strokeStyle = 'black';
+      context.lineWidth = 1.0;
+    }
+  }
+
+  var GridNode = function () {
     this.north = null;
     this.south = null;
     this.east  = null;
@@ -1012,37 +1060,7 @@ var Asteroids = {};
     Text.context = context;
     Text.face = vector_battle;
 
-    var gridWidth = Math.round(Game.canvasWidth / GRID_SIZE);
-    var gridHeight = Math.round(Game.canvasHeight / GRID_SIZE);
-    var grid = new Array(gridWidth);
-    for (var i = 0; i < gridWidth; i++) {
-      grid[i] = new Array(gridHeight);
-      for (var j = 0; j < gridHeight; j++) {
-	grid[i][j] = new GridNode();
-      }
-    }
-
-    // set up the positional references
-    for (var i = 0; i < gridWidth; i++) {
-      for (var j = 0; j < gridHeight; j++) {
-	var node   = grid[i][j];
-	node.north = grid[i][(j == 0) ? gridHeight-1 : j-1];
-	node.south = grid[i][(j == gridHeight-1) ? 0 : j+1];
-	node.west  = grid[(i == 0) ? gridWidth-1 : i-1][j];
-	node.east  = grid[(i == gridWidth-1) ? 0 : i+1][j];
-      }
-    }
-
-    // set up borders
-    for (var i = 0; i < gridWidth; i++) {
-      grid[i][0].dupe.vertical            =  Game.canvasHeight;
-      grid[i][gridHeight-1].dupe.vertical = -Game.canvasHeight;
-    }
-
-    for (var j = 0; j < gridHeight; j++) {
-      grid[0][j].dupe.horizontal           =  Game.canvasWidth;
-      grid[gridWidth-1][j].dupe.horizontal = -Game.canvasWidth;
-    }
+    var grid = new Grid(Game.canvasWidth, Game.canvasHeight, GRID_SIZE);
 
     var sprites = [];
     Game.sprites = sprites;
@@ -1094,13 +1112,13 @@ var Asteroids = {};
 
     var drawGrid = function (context) {
       context.beginPath();
-      for (var i = 0; i < gridWidth; i++) {
-	context.moveTo(i * GRID_SIZE, 0);
-	context.lineTo(i * GRID_SIZE, Game.canvasHeight);
+      for (var i = 0; i < grid.width; i++) {
+	context.moveTo(i * grid.nodeSize, 0);
+	context.lineTo(i * grid.nodeSize, Game.canvasHeight);
       }
-      for (var j = 0; j < gridHeight; j++) {
-	context.moveTo(0, j * GRID_SIZE);
-	context.lineTo(Game.canvasWidth, j * GRID_SIZE);
+      for (var j = 0; j < grid.height; j++) {
+	context.moveTo(0, j * grid.nodeSize);
+	context.lineTo(Game.canvasWidth, j * grid.nodeSize);
       }
       context.closePath();
       context.stroke();
