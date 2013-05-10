@@ -657,10 +657,10 @@ var Asteroids = {};
 	  var roid = $.extend(true, {}, this);
 	  roid.vel.x = Math.random() * 6 - 3;
 	  roid.vel.y = Math.random() * 6 - 3;
+	  roid.vel.rot = Math.random() * 2 - 1;
 	  if (Math.random() > 0.5) {
 	    roid.points.reverse();
 	  }
-	  roid.vel.rot = Math.random() * 2 - 1;
 	  roid.move(roid.scale * 3); // give them a little push
 	  Game.sprites.push(roid);
 	}
