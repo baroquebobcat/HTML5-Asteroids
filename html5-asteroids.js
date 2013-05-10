@@ -1111,9 +1111,9 @@ var Asteroids = {};
       frameCount++;
       elapsedCounter += elapsed;
       if (elapsedCounter > 1000) {
-	elapsedCounter -= 1000;
-	avgFramerate = frameCount;
-	frameCount = 0;
+        elapsedCounter -= 1000;
+        avgFramerate = frameCount;
+        frameCount = 0;
       }
     };
 
@@ -1122,21 +1122,21 @@ var Asteroids = {};
     var togglePaused = function () {
       paused = !paused;
       if (!paused) {
-	// start up again
-	lastFrame = Date.now();
-	mainLoop();
+        // start up again
+        lastFrame = Date.now();
+        mainLoop();
       }
     };
 
     var drawGrid = function (context) {
       context.beginPath();
       for (var i = 0; i < grid.width; i++) {
-	context.moveTo(i * grid.nodeSize, 0);
-	context.lineTo(i * grid.nodeSize, Game.canvasHeight);
+        context.moveTo(i * grid.nodeSize, 0);
+        context.lineTo(i * grid.nodeSize, Game.canvasHeight);
       }
       for (var j = 0; j < grid.height; j++) {
-	context.moveTo(0, j * grid.nodeSize);
-	context.lineTo(Game.canvasWidth, j * grid.nodeSize);
+        context.moveTo(0, j * grid.nodeSize);
+        context.lineTo(Game.canvasWidth, j * grid.nodeSize);
       }
       context.closePath();
       context.stroke();
@@ -1144,12 +1144,12 @@ var Asteroids = {};
 
     var drawExtraDudes = function (context) {
       for (i = 0; i < Game.lives; i++) {
-	extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
-	extraDude.pos.y = 32;
-	withContext(context, function(context){
-	  extraDude.configureTransform();
-	  extraDude.draw(context);
-	});
+        extraDude.pos.x = Game.canvasWidth - (8 * (i + 1));
+        extraDude.pos.y = 32;
+        withContext(context, function(context){
+          extraDude.configureTransform();
+          extraDude.draw(context);
+        });
       }
     }
 
@@ -1175,13 +1175,13 @@ var Asteroids = {};
 
     var runAndReapSprites = function (delta) {
       for (i = 0; i < sprites.length; i++) {
-	sprites[i].run(delta);
+        sprites[i].run(delta);
 
-	if (sprites[i].reap) {
-	  sprites[i].reap = false;
-	  sprites.splice(i, 1);
-	  i--;
-	}
+        if (sprites[i].reap) {
+          sprites[i].reap = false;
+          sprites.splice(i, 1);
+          i--;
+        }
       }
     }
 
@@ -1191,7 +1191,7 @@ var Asteroids = {};
       Game.FSM.execute();
 
       if (showDebugGrid()) {
-	drawGrid(context);
+        drawGrid(context);
       }
       runAndReapSprites(deltaSinceLastFrame());
       drawScore();
@@ -1199,13 +1199,13 @@ var Asteroids = {};
 
       calcFrameRate();
       if (showFramerate) {
-	drawFrameRate();
+        drawFrameRate();
       }
 
       if (paused) {
-	drawPausedText();
+        drawPausedText();
       } else {
-	requestAnimFrame(mainLoop, canvasNode);
+        requestAnimFrame(mainLoop, canvasNode);
       }
     };
 
@@ -1214,26 +1214,26 @@ var Asteroids = {};
     $(window).keydown(function (e) {
       switch (KEY_CODES[e.keyCode]) {
       case 'f':
-	toggleFrameRate();
-	break;
+        toggleFrameRate();
+        break;
       case 'p':
-	togglePaused();
-	break;
+        togglePaused();
+        break;
       case 'm':
-	toggleMuted();
-	break;
+        toggleMuted();
+        break;
       }
     }).keydown(function (e) {
       KEY_STATUS.keyDown = true;
       if (KEY_CODES[e.keyCode]) {
-	e.preventDefault();
-	KEY_STATUS[KEY_CODES[e.keyCode]] = true;
+        e.preventDefault();
+        KEY_STATUS[KEY_CODES[e.keyCode]] = true;
       }
     }).keyup(function (e) {
       KEY_STATUS.keyDown = false;
       if (KEY_CODES[e.keyCode]) {
-	e.preventDefault();
-	KEY_STATUS[KEY_CODES[e.keyCode]] = false;
+        e.preventDefault();
+        KEY_STATUS[KEY_CODES[e.keyCode]] = false;
       }
     });
   };
