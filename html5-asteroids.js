@@ -1103,11 +1103,19 @@ var Asteroids = {};
     var elapsedCounter = 0;
 
     var lastFrame = Date.now();
-    var thisFrame;
     var elapsed;
-    var delta;
 
     var canvasNode = canvas[0];
+
+    var calcFrameRate = function () {
+      frameCount++;
+      elapsedCounter += elapsed;
+      if (elapsedCounter > 1000) {
+	elapsedCounter -= 1000;
+	avgFramerate = frameCount;
+	frameCount = 0;
+      }
+    };
 
     var toggleFrameRate = function () { showFramerate = !showFramerate; };
     var toggleMuted = function () { SFX.muted = !SFX.muted; };
@@ -1158,6 +1166,13 @@ var Asteroids = {};
       Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
     }
 
+    var deltaSinceLastFrame = function () {
+      var thisFrame = Date.now();
+      var elapsed = thisFrame - lastFrame;
+      lastFrame = thisFrame;
+      return elapsed / 30;
+    }
+
     var mainLoop = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
@@ -1166,12 +1181,7 @@ var Asteroids = {};
       if (showDebugGrid()) {
 	drawGrid(context);
       }
-
-      thisFrame = Date.now();
-      elapsed = thisFrame - lastFrame;
-      lastFrame = thisFrame;
-      delta = elapsed / 30;
-
+      var delta = deltaSinceLastFrame();
       for (i = 0; i < sprites.length; i++) {
 	sprites[i].run(delta);
 
@@ -1185,16 +1195,9 @@ var Asteroids = {};
       drawScore();
       drawExtraDudes(context);
 
+      calcFrameRate();
       if (showFramerate) {
 	drawFrameRate();
-      }
-
-      frameCount++;
-      elapsedCounter += elapsed;
-      if (elapsedCounter > 1000) {
-	elapsedCounter -= 1000;
-	avgFramerate = frameCount;
-	frameCount = 0;
       }
 
       if (paused) {
