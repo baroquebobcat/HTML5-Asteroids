@@ -1054,8 +1054,7 @@ var Asteroids = {};
 
     var ship = new Ship();
 
-    ship.pos.x = Game.canvasWidth / 2;
-    ship.pos.y = Game.canvasHeight / 2;
+    ship.pos = centerXYRot();
 
     sprites.push(ship);
 
