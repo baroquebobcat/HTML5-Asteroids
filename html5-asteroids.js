@@ -849,7 +849,9 @@ var Asteroids = {};
   }
   // pre-mute audio
   SFX.muted = true;
-
+  var drawGameOverText = function () {
+    Text.renderText('GAME OVER', 50, Game.canvasWidth/2 - 160, Game.canvasHeight/2 + 10);
+  }
   var Game = {
     score: 0,
     totalAsteroids: 5,
@@ -980,7 +982,7 @@ var Asteroids = {};
 	}
       },
       end_game: function () {
-	Text.renderText('GAME OVER', 50, Game.canvasWidth/2 - 160, Game.canvasHeight/2 + 10);
+	drawGameOverText();
 	if (this.timer == null) {
 	  this.timer = Date.now();
 	}
