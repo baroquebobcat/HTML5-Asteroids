@@ -1173,15 +1173,7 @@ var Asteroids = {};
       return elapsed / 30;
     }
 
-    var mainLoop = function () {
-      context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
-
-      Game.FSM.execute();
-
-      if (showDebugGrid()) {
-	drawGrid(context);
-      }
-      var delta = deltaSinceLastFrame();
+    var runAndReapSprites = function (delta) {
       for (i = 0; i < sprites.length; i++) {
 	sprites[i].run(delta);
 
@@ -1191,7 +1183,17 @@ var Asteroids = {};
 	  i--;
 	}
       }
+    }
 
+    var mainLoop = function () {
+      context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+
+      Game.FSM.execute();
+
+      if (showDebugGrid()) {
+	drawGrid(context);
+      }
+      runAndReapSprites(deltaSinceLastFrame());
       drawScore();
       drawExtraDudes(context);
 
