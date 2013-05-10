@@ -979,8 +979,7 @@ var Asteroids = {};
 	Game.ship.pos = centerXYRot();
 	if (Game.ship.isClear()) {
 	  Game.ship.pos.rot = 0;
-	  Game.ship.vel.x = 0;
-	  Game.ship.vel.y = 0;
+	  Game.ship.vel = zeroedXYRot();
 	  Game.ship.visible = true;
 	  this.state = 'run';
 	}
