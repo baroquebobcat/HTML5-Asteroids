@@ -952,45 +952,45 @@ var Asteroids = {};
 	  Game.nextBigAlienTime = Date.now() + (30000 * Math.random());
 	}
       },
-      new_level: function () {
+      waitingForTimeToPass: function (timeToWait) {
 	if (this.timer == null) {
 	  this.timer = Date.now();
 	}
+	var amWaiting =  Date.now() - this.timer <= timeToWait
+	if (!amWaiting) {this.timer = null;}
+	return amWaiting;
+      },
+      new_level: function () {
 	// wait a second before spawning more asteroids
-	if (Date.now() - this.timer > 1000) {
-	  this.timer = null;
-	  Game.totalAsteroids++;
-	  if (Game.totalAsteroids > 12) Game.totalAsteroids = 12;
-	  Game.spawnAsteroids();
-	  this.state = 'run';
+	if (this.waitingForTimeToPass(1000)) {
+	  return;
 	}
+
+	Game.totalAsteroids++;
+	if (Game.totalAsteroids > 12) Game.totalAsteroids = 12;
+	Game.spawnAsteroids();
+	this.state = 'run';
       },
       player_died: function () {
 	if (Game.lives < 0) {
 	  this.state = 'end_game';
 	} else {
-	  if (this.timer == null) {
-	    this.timer = Date.now();
-	  }
 	  // wait a second before spawning
-	  if (Date.now() - this.timer > 1000) {
-	    this.timer = null;
-	    this.state = 'spawn_ship';
+	  if (this.waitingForTimeToPass(1000)) {
+	    return;
 	  }
+	  this.state = 'spawn_ship';
 	}
       },
       end_game: function () {
 	drawGameOverText();
-	if (this.timer == null) {
-	  this.timer = Date.now();
-	}
-	// wait 5 seconds then go back to waiting state
-	if (Date.now() - this.timer > 5000) {
-	  this.timer = null;
-	  this.state = 'waiting';
-	}
-
 	window.gameStart = false;
+
+	// wait 5 seconds then go back to waiting state
+	if (this.waitingForTimeToPass(5000)) {
+	  return;
+	}
+	this.state = 'waiting';
       },
 
       execute: function () {
