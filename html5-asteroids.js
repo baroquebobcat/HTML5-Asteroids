@@ -1049,7 +1049,7 @@ var Asteroids = {};
   };
 
 
-  $(function () {
+  Asteroids.start = function () {
     var canvas = $("#canvas");
     Game.canvasWidth  = canvas.width();
     Game.canvasHeight = canvas.height();
@@ -1236,7 +1236,8 @@ var Asteroids = {};
 	KEY_STATUS[KEY_CODES[e.keyCode]] = false;
       }
     });
+  };
 
-  });
+  $(function () { Asteroids.start(); });
 
 })();
