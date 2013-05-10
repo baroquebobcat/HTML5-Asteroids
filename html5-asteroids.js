@@ -1109,6 +1109,17 @@ var Asteroids = {};
 
     var canvasNode = canvas[0];
 
+    var toggleFrameRate = function () { showFramerate = !showFramerate; };
+    var toggleMuted = function () { SFX.muted = !SFX.muted; };
+    var togglePaused = function () {
+      paused = !paused;
+      if (!paused) {
+	// start up again
+	lastFrame = Date.now();
+	mainLoop();
+      }
+    };
+
     var drawGrid = function (context) {
       context.beginPath();
       for (var i = 0; i < grid.width; i++) {
@@ -1197,20 +1208,15 @@ var Asteroids = {};
 
     $(window).keydown(function (e) {
       switch (KEY_CODES[e.keyCode]) {
-	case 'f': // show framerate
-	  showFramerate = !showFramerate;
-	  break;
-	case 'p': // pause
-	  paused = !paused;
-	  if (!paused) {
-	    // start up again
-	    lastFrame = Date.now();
-	    mainLoop();
-	  }
-	  break;
-	case 'm': // mute
-	  SFX.muted = !SFX.muted;
-	  break;
+      case 'f':
+	toggleFrameRate();
+	break;
+      case 'p':
+	togglePaused();
+	break;
+      case 'm':
+	toggleMuted();
+	break;
       }
     }).keydown(function (e) {
       KEY_STATUS.keyDown = true;
