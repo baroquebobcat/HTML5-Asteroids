@@ -79,10 +79,13 @@ var Asteroids = {};
   var xyrot = function(x, y, rot) {
     return {x: x, y: y, rot: rot};
   }
-
   var zeroedXYRot = function() { return xyrot(0,0,0); }
-
   var centerXYRot = function() { return xyrot(Game.canvasWidth / 2, Game.canvasHeight / 2); }
+  var randomPosition = function() {
+    return xyrot(Math.random() * Game.canvasWidth,
+		 Math.random() * Game.canvasHeight,
+		 0);
+  }
 
   var Sprite = function () {
     this.init = function (name, points) {
@@ -865,19 +868,14 @@ var Asteroids = {};
     bigAlien: null,
 
     nextBigAlienTime: null,
-    randomPosition: function() {
-      return xyrot(Math.random() * this.canvasWidth, 
-		   Math.random() * this.canvasHeight,
-		   0);
-    },
 
     spawnAsteroids: function (count) {
       if (!count) count = this.totalAsteroids;
       for (var i = 0; i < count; i++) {
 	var roid = new Asteroid();
-	roid.pos = this.randomPosition();
+	roid.pos = randomPosition();
 	while (!roid.isClear()) {
-	  roid.pos = this.randomPosition();
+	  roid.pos = randomPosition();
 	}
 	roid.vel.x = Math.random() * 4 - 2;
 	roid.vel.y = Math.random() * 4 - 2;
