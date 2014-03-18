@@ -24,11 +24,15 @@ var Asteroids = {};
     KEY_STATUS[KEY_CODES[code]] = false;
   }
 
-  var rotateLeft = function () { return KEY_STATUS.left; }
-  var rotateRight = function () { return KEY_STATUS.right; }
-  var thrustersOn = function () { return KEY_STATUS.up; }
-  var fireBullets = function () { return KEY_STATUS.space; }
-  var showDebugGrid = function () { return KEY_STATUS.g; }
+  var keyStatusOf = function (name) {
+    return function() { return KEY_STATUS[name]; };
+  }
+
+  var rotateLeft    = keyStatusOf('left');
+  var rotateRight   = keyStatusOf('right');
+  var thrustersOn   = keyStatusOf('up');
+  var fireBullets   = keyStatusOf('space');
+  var showDebugGrid = keyStatusOf('g');
   var shouldStartGame = function () { return KEY_STATUS.space || window.gameStart;}
 
   var GRID_SIZE = 60;
