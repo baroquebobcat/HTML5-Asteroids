@@ -248,16 +248,16 @@ var Asteroids = {};
     this.findCollisionCanidates = function () {
       if (!this.visible || !this.currentNode) return [];
       var cn = this.currentNode;
-      var canidates = [];
-      if (cn.nextSprite) canidates.push(cn.nextSprite);
-      if (cn.north.nextSprite) canidates.push(cn.north.nextSprite);
-      if (cn.south.nextSprite) canidates.push(cn.south.nextSprite);
-      if (cn.east.nextSprite) canidates.push(cn.east.nextSprite);
-      if (cn.west.nextSprite) canidates.push(cn.west.nextSprite);
-      if (cn.north.east.nextSprite) canidates.push(cn.north.east.nextSprite);
-      if (cn.north.west.nextSprite) canidates.push(cn.north.west.nextSprite);
-      if (cn.south.east.nextSprite) canidates.push(cn.south.east.nextSprite);
-      if (cn.south.west.nextSprite) canidates.push(cn.south.west.nextSprite);
+      var canidates = [cn.nextSprite,
+                       cn.north.nextSprite,
+                       cn.south.nextSprite,
+                       cn.east.nextSprite,
+                       cn.west.nextSprite,
+                       cn.north.east.nextSprite,
+                       cn.north.west.nextSprite,
+                       cn.south.east.nextSprite,
+                       cn.south.west.nextSprite].
+                       filter(function(sprite) {return sprite;})
       return canidates
     };
     this.checkCollisionsAgainst = function (canidates) {
