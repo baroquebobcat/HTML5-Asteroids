@@ -271,38 +271,37 @@ var Asteroids = {};
     };
     this.checkCollision = function (other) {
       if (!other.visible ||
-	   this == other ||
-	   this.collidesWith.indexOf(other.name) == -1) return;
+          this == other ||
+          this.collidesWith.indexOf(other.name) == -1) return;
+
       var trans = other.transformedPoints();
-      var px, py;
-      var count = trans.length/2;
-      for (var i = 0; i < count; i++) {
-	px = trans[i*2];
-	py = trans[i*2 + 1];
-	// mozilla doesn't take into account transforms with isPointInPath >:-P
-	if (($.browser.mozilla) ? this.pointInPolygon(px, py) : this.context.isPointInPath(px, py)) {
-	  other.collision(this);
-	  this.collision(other);
-	  return;
-	}
-      }
+      var self = this;
+      trans.forEach(function(pos) {
+        var px=pos.x, py=pos.y;
+        // mozilla doesn't take into account transforms with isPointInPath >:-P
+        if (($.browser.mozilla) ? self.pointInPolygon(px, py) : self.context.isPointInPath(px, py)) {
+          other.collision(self);
+          self.collision(other);
+          return;
+        }
+      });
     };
     this.pointInPolygon = function (x, y) {
       var points = this.transformedPoints();
-      var j = 2;
+      var j = 1;
       var y0, y1;
       var oddNodes = false;
-      for (var i = 0; i < points.length; i += 2) {
-	y0 = points[i + 1];
-	y1 = points[j + 1];
-	if ((y0 < y && y1 >= y) ||
-	    (y1 < y && y0 >= y)) {
-	  if (points[i]+(y-y0)/(y1-y0)*(points[j]-points[i]) < x) {
-	    oddNodes = !oddNodes;
-	  }
-	}
-	j += 2
-	if (j == points.length) j = 0;
+      for (var i = 0; i < points.length; i += 1) {
+        y0 = points[i].y;
+        y1 = points[j].y;
+        if ((y0 < y && y1 >= y) ||
+            (y1 < y && y0 >= y)) {
+          if (points[i].x+(y-y0)/(y1-y0)*(points[j].x-points[i].x) < x) {
+            oddNodes = !oddNodes;
+          }
+        }
+        j += 1
+        if (j == points.length) j = 0;
       }
       return oddNodes;
     };
@@ -318,14 +317,13 @@ var Asteroids = {};
     };
     this.transformedPoints = function () {
       if (this.transPoints) return this.transPoints;
-      var trans = new Array(this.points.length);
+      var trans = [];
       this.matrix.configure(this.scale, this.pos);
       for (var i = 0; i < this.points.length/2; i++) {
-	var xi = i*2;
-	var yi = xi + 1;
-	var pts = this.matrix.multiply(this.points[xi], this.points[yi], 1);
-	trans[xi] = pts[0];
-	trans[yi] = pts[1];
+        var xi = i*2;
+        var yi = xi + 1;
+        var pts = this.matrix.multiply(this.points[xi], this.points[yi], 1);
+        trans.push(xyrot(pts[0],pts[1],0))
       }
       this.transPoints = trans; // cache translated points
       return trans;
@@ -597,7 +595,7 @@ var Asteroids = {};
       this.currentNode = null;
     };
     this.transformedPoints = function (other) {
-      return [this.pos.x, this.pos.y];
+      return [this.pos];
     };
 
   };
