@@ -129,13 +129,13 @@ var Asteroids = {};
       var canidates;
       var self = this;
       withContext(this.context, function(context){
-	self.configureTransform();
-	self.draw(context);
+        self.configureTransform();
+        self.draw(context);
 
-	canidates = self.findCollisionCanidates();
+        canidates = self.findCollisionCanidates();
 
-	self.matrix.configure(self.scale, self.pos);
-	self.checkCollisionsAgainst(canidates);
+        self.matrix.configure(self.scale, self.pos);
+        self.checkCollisionsAgainst(canidates);
       });
       var transformDrawCheckCollisions = function(canidates) {
         withContext(self.context, function(context){
@@ -149,7 +149,7 @@ var Asteroids = {};
           this.currentNode &&
           this.currentNode.dupe.horizontal) {
         this.pos.x += this.currentNode.dupe.horizontal;
-	transformDrawCheckCollisions(canidates);
+        transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.pos.x -= this.currentNode.dupe.horizontal;
         }
