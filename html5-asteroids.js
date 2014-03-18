@@ -347,16 +347,8 @@ var Asteroids = {};
 	      cn.south.west.isEmpty(this.collidesWith));
     };
     this.wrapPostMove = function () {
-      if (this.pos.x > Game.canvasWidth) {
-	this.pos.x = 0;
-      } else if (this.pos.x < 0) {
-	this.pos.x = Game.canvasWidth;
-      }
-      if (this.pos.y > Game.canvasHeight) {
-	this.pos.y = 0;
-      } else if (this.pos.y < 0) {
-	this.pos.y = Game.canvasHeight;
-      }
+      this.pos.x = (Game.canvasWidth  + this.pos.x) % Game.canvasWidth;
+      this.pos.y = (Game.canvasHeight + this.pos.y) % Game.canvasHeight;
     };
 
   };
