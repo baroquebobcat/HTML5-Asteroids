@@ -142,12 +142,12 @@ var Asteroids = {};
           self.configureTransform();
           self.draw(context);
           self.checkCollisionsAgainst(canidates);
-	});
+        });
       };
 
       if (this.bridgesH &&
-	  this.currentNode &&
-	  this.currentNode.dupe.horizontal) {
+          this.currentNode &&
+          this.currentNode.dupe.horizontal) {
         this.pos.x += this.currentNode.dupe.horizontal;
 	transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
@@ -155,22 +155,22 @@ var Asteroids = {};
         }
       }
       if (this.bridgesV &&
-	  this.currentNode &&
-	  this.currentNode.dupe.vertical) {
+          this.currentNode &&
+          this.currentNode.dupe.vertical) {
         this.pos.y += this.currentNode.dupe.vertical;
-	transformDrawCheckCollisions(canidates);
+        transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.pos.y -= this.currentNode.dupe.vertical;
         }
       }
       if (this.bridgesH && 
-	  this.bridgesV &&
+          this.bridgesV &&
           this.currentNode &&
           this.currentNode.dupe.vertical &&
           this.currentNode.dupe.horizontal) {
         this.pos.x += this.currentNode.dupe.horizontal;
         this.pos.y += this.currentNode.dupe.vertical;
-	transformDrawCheckCollisions(canidates);
+        transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.pos.x -= this.currentNode.dupe.horizontal;
           this.pos.y -= this.currentNode.dupe.vertical;
