@@ -1189,8 +1189,12 @@ var Asteroids = {};
       }
     }
 
-    var mainLoop = function () {
+    var clearCanvas = function () {
       context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+    }
+
+    var mainLoop = function () {
+      clearCanvas();
 
       Game.FSM.execute();
 
@@ -1198,6 +1202,7 @@ var Asteroids = {};
         drawGrid(context);
       }
       runAndReapSprites(deltaSinceLastFrame());
+
       drawScore();
       drawExtraDudes(context);
 
