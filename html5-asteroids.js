@@ -334,17 +334,19 @@ var Asteroids = {};
       if (this.collidesWith.length == 0) return true;
       var cn = this.currentNode;
       if (cn == null) {
-	cn = this.grid.get(this.pos);
+        cn = this.grid.get(this.pos);
       }
-      return (cn.isEmpty(this.collidesWith) &&
-	      cn.north.isEmpty(this.collidesWith) &&
-	      cn.south.isEmpty(this.collidesWith) &&
-	      cn.east.isEmpty(this.collidesWith) &&
-	      cn.west.isEmpty(this.collidesWith) &&
-	      cn.north.east.isEmpty(this.collidesWith) &&
-	      cn.north.west.isEmpty(this.collidesWith) &&
-	      cn.south.east.isEmpty(this.collidesWith) &&
-	      cn.south.west.isEmpty(this.collidesWith));
+      var self = this;
+      return [cn,
+	            cn.north,
+	            cn.south,
+	            cn.east,
+	            cn.west,
+	            cn.north.east,
+	            cn.north.west,
+	            cn.south.east,
+	            cn.south.west].
+            every(function(cn) {return cn.isEmpty(self.collidesWith)});
     };
     this.wrapPostMove = function () {
       this.pos.x = (Game.canvasWidth  + this.pos.x) % Game.canvasWidth;
