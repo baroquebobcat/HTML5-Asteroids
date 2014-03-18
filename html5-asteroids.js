@@ -145,29 +145,32 @@ var Asteroids = {};
         });
       };
 
-      if (this.bridgesH &&
-          this.currentNode &&
-          this.currentNode.dupe.horizontal) {
+      function hasHorizDupe(sprite) {
+        return sprite.bridgesH &&
+               sprite.currentNode &&
+               sprite.currentNode.dupe.horizontal;
+      }
+      function hasVertDupe(sprite) {
+        return sprite.bridgesV &&
+               sprite.currentNode &&
+               sprite.currentNode.dupe.vertical;
+      }
+
+      if (hasHorizDupe(this)) {
         this.pos.x += this.currentNode.dupe.horizontal;
         transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.pos.x -= this.currentNode.dupe.horizontal;
         }
       }
-      if (this.bridgesV &&
-          this.currentNode &&
-          this.currentNode.dupe.vertical) {
+      if (hasVertDupe(this)) {
         this.pos.y += this.currentNode.dupe.vertical;
         transformDrawCheckCollisions(canidates);
         if (this.currentNode) {
           this.pos.y -= this.currentNode.dupe.vertical;
         }
       }
-      if (this.bridgesH && 
-          this.bridgesV &&
-          this.currentNode &&
-          this.currentNode.dupe.vertical &&
-          this.currentNode.dupe.horizontal) {
+      if (hasVertDupe(this) && hasHorizDupe(this)) {
         this.pos.x += this.currentNode.dupe.horizontal;
         this.pos.y += this.currentNode.dupe.vertical;
         transformDrawCheckCollisions(canidates);
