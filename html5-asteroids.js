@@ -261,13 +261,13 @@ var Asteroids = {};
       return canidates
     };
     this.checkCollisionsAgainst = function (canidates) {
-      for (var i = 0; i < canidates.length; i++) {
-	var ref = canidates[i];
-	do {
-	  this.checkCollision(ref);
-	  ref = ref.nextSprite;
-	} while (ref)
-      }
+      var self = this;
+      canidates.forEach(function(ref) {
+        do {
+          self.checkCollision(ref);
+          ref = ref.nextSprite;
+        } while (ref)
+      });
     };
     this.checkCollision = function (other) {
       if (!other.visible ||
